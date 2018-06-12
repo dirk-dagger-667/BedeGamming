@@ -1,28 +1,58 @@
 ﻿using ConsoleApplication1.Logic;
-using System.Collections.Generic;
+using ConsoleApplication1.Utils;
+using System;
 
 namespace ConsoleApplication1
 {
     public class Engine
     {
-        static void Main(string[] args)
+        private const int NumberOfSlots = 12;
+
+        public static void Main(string[] args)
         {
+            var randomGenerator = RandomGenerator.Instance;
+            var slotGenerator = new SlotGenerator(randomGenerator);
             var winningCalculator = new WinningsCalculator();
-            var winnings = winningCalculator.CalcWinnigs(new List<string> { "B", "A", "A", "A", "A", "A", "A", "*", "B", "*", "A", "A" }, 10M);
+            var slotsPrinter = new SlotsPrinter();
+            var player = new Player();
 
-            var printer = new SlotsPrinter();
+            decimal balance;
+            UserInputValidation(slotsPrinter.BeginningDepositMessage, player.Deposit, out balance);
+            
+            while (player.Balance > 0)
+            {
+                decimal stake;
+                UserInputValidation(slotsPrinter.StakeAmountMessage, player.Stake, out stake);
 
-            var currentBalanceMessage = printer.GetCurrentBalanceMessage(10);
-            var depositMessage = printer.GetDepositMessage(10);
-            var stakeMessage = printer.GetStakeAmountMessage(10);
-            var winningsMessage = printer.GetWinningsMessage(10);
-            var slotsAsString = printer.SlotsAsString(new List<string> { "B", "A", "A", "A", "A", "A", "A", "*", "B", "*", "A", "A" });
+                var slots = slotGenerator.GenerateSlots(NumberOfSlots);
+                Console.WriteLine(slotsPrinter.SlotsAsString(slots));
 
-            System.Console.WriteLine(currentBalanceMessage);
-            System.Console.WriteLine(depositMessage);
-            System.Console.WriteLine(stakeMessage);
-            System.Console.WriteLine(winningsMessage);
-            System.Console.WriteLine(slotsAsString);
+                var winnigs = winningCalculator.CalcWinnigs(slots, stake);
+                player.Win(winnigs);
+                Console.WriteLine(slotsPrinter.GetWinningsMessage(winnigs));
+
+                Console.WriteLine(slotsPrinter.GetCurrentBalanceMessage(player.Balance));
+                Console.WriteLine();
+            }
+
+            Console.WriteLine();
+        }
+
+        private static void UserInputValidation(string message, Action<decimal> playerAction, out decimal amount)
+        {
+            while (true)
+            {
+                System.Console.WriteLine(message);
+                decimal depositAmount;
+                if (decimal.TryParse(System.Console.ReadLine(), out depositAmount))
+                {
+                    amount = depositAmount;
+                    playerAction(depositAmount);
+                    break;
+                }
+
+                System.Console.WriteLine("You've entered an invalid amount!");
+            }
         }
     }
 }

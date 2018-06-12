@@ -1,8 +1,8 @@
-﻿namespace ConsoleApplication1
+﻿namespace ConsoleApplication1.Logic
 {
     public class Player
     {
-        public decimal Balance { get; set; }
+        public decimal Balance { get; private set; }
 
         public void Deposit(decimal amount) => this.Balance = amount;
 

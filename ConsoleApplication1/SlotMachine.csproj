@@ -44,7 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Engine.cs" />
-    <Compile Include="Player.cs" />
+    <Compile Include="Logic\Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Logic\SlotGenerator.cs" />
     <Compile Include="Utils\RandomGenerator.cs" />
