@@ -49,6 +49,7 @@
     <Compile Include="Logic\SlotGenerator.cs" />
     <Compile Include="Utils\RandomGenerator.cs" />
     <Compile Include="Logic\WinningsCalculator.cs" />
+    <Compile Include="Logic\SlotsPrinter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
